@@ -33,13 +33,15 @@ func main() {
 		},
 	}
 	app.Usage = "System info, avg free space and memory usage aka (w + free + df)"
-	app.Action = func(c *cli.Context) {
-		s, err := getSystemInfo(c)
+	app.Action = func(ctx *cli.Context) {
+		s, err := getSystemInfo(ctx)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		if s.String() != "" {
-			log.Println(s)
+		if ctx.GlobalString("format") != "text" {
+			fmt.Println(s)
+		} else {
+			fmt.Print(s)
 		}
 
 		os.Exit(0)
