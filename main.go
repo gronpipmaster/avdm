@@ -15,12 +15,15 @@ import (
 	"time"
 )
 
+const VERSION = "0.1"
+const SOURCE_DATE = "2014-09-11T01:48:11+07:00"
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "wdm"
 	app.EnableBashCompletion = true
 	app.Author = "gronpipmaster"
-	app.Version = "0.1-alfa"
+	app.Version = VERSION
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "human-readable, m",
