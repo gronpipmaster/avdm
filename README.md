@@ -1,14 +1,14 @@
-wdm
+avdm
 ===
 
 ### Install
 ```bash
-go install github.com/gronpipmaster/wdm
+go install github.com/gronpipmaster/avdm
 ```
 
 ### Usage
 ```bash
-wdm -m
+avdm -m
 ```
     10 Sep 14 03:35 NOVT, load average: 0.52, 0.79, 0.89
             Total   Used    Free    Percent
@@ -19,5 +19,5 @@ wdm -m
     /home   57GB    45GB    13GB    78%
 
 ### Features
-    1)Support 3 format output text, json, xml
+    1)Support 3 format output (text, json, xml)
     2)Support human readable text output

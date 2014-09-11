@@ -20,7 +20,7 @@ const SOURCE_DATE = "2014-09-11T01:48:11+07:00"
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "wdm"
+	app.Name = "avdm"
 	app.EnableBashCompletion = true
 	app.Author = "gronpipmaster"
 	app.Version = VERSION
@@ -35,7 +35,7 @@ func main() {
 			Usage: "text, json, xml",
 		},
 	}
-	app.Usage = "System info, avg free space and memory usage aka (w + free + df)"
+	app.Usage = "System info, avg free space and memory usage aka (avg + free + df)"
 	app.Action = func(ctx *cli.Context) {
 		s, err := getSystemInfo(ctx)
 		if err != nil {
