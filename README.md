@@ -3,7 +3,7 @@ avdm
 
 ### Install
 ```bash
-go install github.com/gronpipmaster/avdm
+go get github.com/gronpipmaster/avdm
 ```
 
 ### Usage
