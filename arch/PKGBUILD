@@ -1,0 +1,18 @@
+pkgname='avdm-git'
+pkgver="20141003"
+pkgrel="1"
+arch=('i686' 'x86_64')
+makedepends=('go')
+options=('!strip')
+
+_gopackage='github.com/gronpipmaster/avdm'
+
+build() {
+    export GOPATH="$srcdir"
+    cd "$srcdir"
+    go get -u "$_gopackage"
+}
+
+package() {
+    install -Dm755 "$srcdir/bin/avdm" "$pkgdir/usr/bin/avdm"
+}
