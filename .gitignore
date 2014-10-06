@@ -22,3 +22,7 @@ _testmain.go
 *.exe
 *.test
 tmp/
+
+# arch build
+/arch
+!/arch/PKGBUILD

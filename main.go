@@ -67,7 +67,7 @@ type SystemInfo struct {
 		Swap    Info `json:"swap"`
 	} `json:"memory"`
 	Avg string       `json:"avg"`
-	ctx *cli.Context `json:"-" xml:"-"`
+	ctx *cli.Context
 }
 
 func (s *SystemInfo) String() string {
