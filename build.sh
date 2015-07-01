@@ -9,7 +9,7 @@ ARCH="amd64"
 make_package_files()
 {
     mkdir -p $BUILD_PATH/usr/bin
-    chmod 755 -R $BUILD_PATH
+    chmod 0755 -R $BUILD_PATH
     echo "Download dependens for package project. Please wait ..."
     go get -v -t $PROJECT_PATH
     cd $GOPATH/src/$PROJECT_PATH
@@ -40,6 +40,9 @@ make_control_file()
 
 make_package()
 {
+    #reset rigth for rpm
+    chmod 0555 $BUILD_PATH/usr/bin
+    chmod 0555 $BUILD_PATH
     local DEB_NAME=${PROJECT_NAME}_${VERSION}_${ARCH}
     echo "Make $DEB_NAME.deb"
     fakeroot dpkg-deb -b $BUILD_PATH ${FULL_PATH}/${DEB_NAME}.deb || exit 1
@@ -49,6 +52,7 @@ make_package()
 
 clean()
 {
+    chmod -R 0775 $BUILD_PATH
     rm -r $BUILD_PATH
 }
 

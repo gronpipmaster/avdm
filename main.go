@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"github.com/codegangsta/cli"
 	"github.com/dustin/go-humanize"
-	"github.com/shirou/gopsutil"
+	"github.com/shirou/gopsutil/disk"
+	"github.com/shirou/gopsutil/load"
+	"github.com/shirou/gopsutil/mem"
 	"log"
 	"os"
 	"strings"
@@ -40,7 +42,7 @@ func main() {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		if ctx.GlobalString("format") != "text" {
+		if ctx.String("format") != "text" {
 			fmt.Println(s)
 		} else {
 			fmt.Print(s)
@@ -66,12 +68,12 @@ type SystemInfo struct {
 		Virtual Info `json:"virtual"`
 		Swap    Info `json:"swap"`
 	} `json:"memory"`
-	Avg string       `json:"avg"`
+	Avg string `json:"avg"`
 	ctx *cli.Context
 }
 
 func (s *SystemInfo) String() string {
-	switch s.ctx.GlobalString("format") {
+	switch s.ctx.String("format") {
 	case "json":
 		jsonStr, _ := json.Marshal(s)
 		return string(jsonStr)
@@ -81,7 +83,7 @@ func (s *SystemInfo) String() string {
 	}
 	funcMap := template.FuncMap{
 		"human": func(value uint64) string {
-			if s.ctx.GlobalBool("human-readable") && value != 0 {
+			if s.ctx.Bool("human-readable") && value != 0 {
 				return humanize.Bytes(value)
 			} else {
 				return fmt.Sprint(value / 1000)
@@ -115,13 +117,13 @@ func getSystemInfo(c *cli.Context) (sys *SystemInfo, err error) {
 	sys = new(SystemInfo)
 	sys.ctx = c
 	sys.Now = time.Now().Format(time.RFC822)
-	partitions, err := gopsutil.DiskPartitions(false)
+	partitions, err := disk.DiskPartitions(false)
 	if err != nil {
 		return
 	}
 	for _, partition := range partitions {
 		if strings.HasPrefix(partition.Device, "/dev/") {
-			diskInfo, err := gopsutil.DiskUsage(partition.Mountpoint)
+			diskInfo, err := disk.DiskUsage(partition.Mountpoint)
 			if err != nil {
 				return nil, err
 			}
@@ -129,20 +131,20 @@ func getSystemInfo(c *cli.Context) (sys *SystemInfo, err error) {
 				Device:     partition.Device,
 				Mountpoint: partition.Mountpoint,
 			}
-			disk.Total = diskInfo.Total * 1000
-			disk.Used = diskInfo.Used * 1000
-			disk.Free = diskInfo.Free * 1000
+			disk.Total = diskInfo.Total
+			disk.Used = diskInfo.Used
+			disk.Free = diskInfo.Free
 			disk.UsedPercent = int(diskInfo.UsedPercent)
 			sys.Disks = append(sys.Disks, disk)
 		}
 	}
-	avg, err := gopsutil.LoadAvg()
+	avg, err := load.LoadAvg()
 	if err != nil {
 		return
 	}
 	sys.Avg = fmt.Sprint(avg.Load1) + ", " + fmt.Sprint(avg.Load5) + ", " + fmt.Sprint(avg.Load15)
 
-	memory, err := gopsutil.VirtualMemory()
+	memory, err := mem.VirtualMemory()
 	if err != nil {
 		return
 	}
@@ -155,7 +157,7 @@ func getSystemInfo(c *cli.Context) (sys *SystemInfo, err error) {
 		UsedPercent: int(memory.UsedPercent),
 	}
 
-	swap, err := gopsutil.SwapMemory()
+	swap, err := mem.SwapMemory()
 	if err != nil {
 		return
 	}

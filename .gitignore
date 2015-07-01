@@ -2,6 +2,8 @@
 *.o
 *.a
 *.so
+*.deb
+*.rpm
 
 # Folders
 _obj
